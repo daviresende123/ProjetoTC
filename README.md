@@ -1,38 +1,32 @@
-# API de Autômatos
+# Pré-requisitos
+Antes de começar, certifique-se de ter o seguinte instalado em sua máquina:
 
-## Configuração
+1. **Python 3.7+**: A API foi desenvolvida em Python e requer uma versão compatível. Você pode verificar sua versão do Python executando `python --version` no terminal.
+2. **Git**: Necessário para clonar o repositório. Você pode verificar se o Git está instalado executando `git --version`. Caso não esteja, você pode baixá-lo em [https://git-scm.com/](https://git-scm.com/).
 
-1. Crie um ambiente virtual
-2. Instale as dependências:
-```bash
-pip install -r requirements.txt
-```
+# Clonando o repositório
+1. Abra o terminal na pasta onde você deseja salvar o projeto.
+2. Execute o seguinte comando para clonar o repositório:
+   ```bash
+   git clone https://github.com/daviresende123/ProjetoTC.git
+3.Após a clonagem, acesse o diretório do projeto: cd <nome do diretório do seu projeto>
 
-3. Execute a API:
-```bash
-uvicorn main:app --reload
-```
+# Criando e ativando o ambiente virtual
+1.Dentro do diretório do projeto, crie um ambiente virtual (recomendado para isolar as dependências do projeto):
+    Linux/macOS: `python3 -m venv venv`
+    Windows: `python -m venv venv`
+    
+2.Ative o ambiente virtual:
+    Linux/macOS: `source venv/bin/activate`
+    Windows: `venv\Scripts\activate`
 
-## Endpoints
 
-- `POST /dfa/create`: Criar um Autômato Finito Determinístico (AFD)
-- `POST /dfa/test-string`: Testar uma string em um AFD
+# Instalando as dependências
+1.Com o ambiente virtual ativado, instale as dependências do projeto a partir do arquivo requirements.txt:
+    `pip install -r requirements.txt`
 
-## Exemplo de Uso
 
-### Criar DFA
-```json
-{
-  "states": ["q0", "q1"],
-  "input_symbols": ["0", "1"],
-  "transitions": {
-    "q0": {"0": "q1", "1": "q0"},
-    "q1": {"0": "q0", "1": "q1"}
-  },
-  "initial_state": "q0",
-  "final_states": ["q1"]
-}
-```
-
-### Testar String
-Envie a mesma configuração do DFA junto com a string de teste.
+# Executando a API
+1.Após a instalação das dependências, você pode executar a API usando o Uvicorn:
+    `uvicorn main:app --reload`
+2.Abra o seu navegador e acesse http://127.0.0.1:8000/docs#/ para interagir com a API

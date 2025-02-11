@@ -12,14 +12,14 @@ app = FastAPI(title="Autômatos API")
 # Dicionário para armazenar os autômatos criados
 automatos_storage = {}
 
-class AFDConfig(BaseModel):  # Renomeado de DFAConfig
+class AFDConfig(BaseModel):
     states: set[str]
     input_symbols: set[str]
     transitions: dict
     initial_state: str
     final_states: set[str]
 
-class AFPConfig(BaseModel):  # Renomeado de PDAConfig
+class AFPConfig(BaseModel):
     states: Set[str]
     input_symbols: Set[str]
     stack_symbols: Set[str]
@@ -28,7 +28,7 @@ class AFPConfig(BaseModel):  # Renomeado de PDAConfig
     initial_stack_symbol: str
     final_states: Set[str]
 
-class MTConfig(BaseModel):  # Renomeado de TMConfig
+class MTConfig(BaseModel):
     states: Set[str]
     input_symbols: Set[str]
     tape_symbols: Set[str]
@@ -37,25 +37,21 @@ class MTConfig(BaseModel):  # Renomeado de TMConfig
     final_states: Set[str]
     blank_symbol: str
 
-def create_dot_string(automaton_type: str, config: Union[AFDConfig, AFPConfig, MTConfig]) -> str:
+def criar_dot_string(automaton_type: str, config: Union[AFDConfig, AFPConfig, MTConfig]) -> str:
+    # Mantendo a mesma implementação, apenas traduzindo o nome da função
     dot_str = ['digraph {']
-    
-    # Configurações gerais do grafo
     dot_str.append('rankdir=LR;')
     dot_str.append('node [shape=circle];')
     
-    # Adiciona estados
     for state in config.states:
         if state in config.final_states:
             dot_str.append(f'"{state}" [shape=doublecircle];')
         else:
             dot_str.append(f'"{state}" [shape=circle];')
     
-    # Estado inicial
     dot_str.append(f'__start0 [label="", shape=none];')
     dot_str.append(f'__start0 -> "{config.initial_state}";')
     
-    # Adiciona transições
     if automaton_type == "afd":
         for state, transitions in config.transitions.items():
             for symbol, next_state in transitions.items():
@@ -75,8 +71,8 @@ def create_dot_string(automaton_type: str, config: Union[AFDConfig, AFPConfig, M
     dot_str.append('}')
     return '\n'.join(dot_str)
 
-@app.post("/afd/create")  # Renomeado de dfa
-def create_afd(config: AFDConfig):
+@app.post("/afd/criar")
+def criar_afd(config: AFDConfig):
     try:
         afd = DFA(
             states=config.states,
@@ -91,20 +87,20 @@ def create_afd(config: AFDConfig):
             "config": config,
             "automato": afd
         }
-        return {"message": "AFD criado com sucesso", "automato_id": automato_id}
+        return {"mensagem": "AFD criado com sucesso", "automato_id": automato_id}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/afd/visualize")  # Renomeado de dfa
-def visualize_afd(config: AFDConfig):
+@app.post("/afd/visualizar")
+def visualizar_afd(config: AFDConfig):
     try:
-        dot_string = create_dot_string("afd", config)
+        dot_string = criar_dot_string("afd", config)
         return Response(content=dot_string, media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/afd/test-string")  # Renomeado de dfa
-def test_afd_string(config: AFDConfig, test_string: str):
+@app.post("/afd/testar-string")
+def testar_string_afd(config: AFDConfig, string: str):
     try:
         afd = DFA(
             states=config.states,
@@ -113,13 +109,13 @@ def test_afd_string(config: AFDConfig, test_string: str):
             initial_state=config.initial_state,
             final_states=config.final_states
         )
-        is_accepted = afd.accepts_input(test_string)
-        return {"string": test_string, "accepted": is_accepted}
+        is_accepted = afd.accepts_input(string)
+        return {"string": string, "aceita": is_accepted}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/afp/create")  # Renomeado de pda
-def create_afp(config: AFPConfig):
+@app.post("/afp/criar")
+def criar_afp(config: AFPConfig):
     try:
         afp = DPDA(
             states=config.states,
@@ -136,20 +132,20 @@ def create_afp(config: AFPConfig):
             "config": config,
             "automato": afp
         }
-        return {"message": "AFP criado com sucesso", "automato_id": automato_id}
+        return {"mensagem": "AFP criado com sucesso", "automato_id": automato_id}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/afp/visualize")  # Renomeado de pda
-def visualize_afp(config: AFPConfig):
+@app.post("/afp/visualizar")
+def visualizar_afp(config: AFPConfig):
     try:
-        dot_string = create_dot_string("afp", config)
+        dot_string = criar_dot_string("afp", config)
         return Response(content=dot_string, media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/afp/test-string")  # Renomeado de pda
-def test_afp_string(config: AFPConfig, test_string: str):
+@app.post("/afp/testar-string")
+def testar_string_afp(config: AFPConfig, string: str):
     try:
         afp = DPDA(
             states=config.states,
@@ -160,13 +156,13 @@ def test_afp_string(config: AFPConfig, test_string: str):
             initial_stack_symbol=config.initial_stack_symbol,
             final_states=config.final_states
         )
-        is_accepted = afp.accepts_input(test_string)
-        return {"string": test_string, "accepted": is_accepted}
+        is_accepted = afp.accepts_input(string)
+        return {"string": string, "aceita": is_accepted}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/mt/create")  # Renomeado de tm
-def create_mt(config: MTConfig):
+@app.post("/mt/criar")
+def criar_mt(config: MTConfig):
     try:
         mt = DTM(
             states=config.states,
@@ -183,20 +179,20 @@ def create_mt(config: MTConfig):
             "config": config,
             "automato": mt
         }
-        return {"message": "MT criada com sucesso", "automato_id": automato_id}
+        return {"mensagem": "MT criada com sucesso", "automato_id": automato_id}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/mt/visualize")  # Renomeado de tm
-def visualize_mt(config: MTConfig):
+@app.post("/mt/visualizar")
+def visualizar_mt(config: MTConfig):
     try:
-        dot_string = create_dot_string("mt", config)
+        dot_string = criar_dot_string("mt", config)
         return Response(content=dot_string, media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-@app.post("/mt/run")  # Renomeado de tm
-def run_mt(config: MTConfig, input_string: str):
+@app.post("/mt/executar")
+def executar_mt(config: MTConfig, entrada: str):
     try:
         mt = DTM(
             states=config.states,
@@ -207,14 +203,17 @@ def run_mt(config: MTConfig, input_string: str):
             final_states=config.final_states,
             blank_symbol=config.blank_symbol
         )
-        result = mt.run_input(input_string)
-        return {"input": input_string, "result": result}
+        # Usando read_input_stepwise ao invés de run_input
+        steps = list(mt.read_input_stepwise(entrada))
+        # Pegando o resultado final (última configuração)
+        final_config = steps[-1]
+        resultado = final_config.tape.get_symbols_as_str()
+        return {"entrada": entrada, "resultado": resultado}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-# Novo endpoint para recuperar informações do autômato
 @app.get("/automato/{automato_id}")
-def get_automato_info(automato_id: str):
+def obter_info_automato(automato_id: str):
     if automato_id not in automatos_storage:
         raise HTTPException(status_code=404, detail="Autômato não encontrado")
     
@@ -222,16 +221,16 @@ def get_automato_info(automato_id: str):
     config = automato_data["config"]
     
     return {
-        "type": automato_data["type"],
-        "states": list(config.states),
-        "input_symbols": list(config.input_symbols),
-        "transitions": config.transitions,
-        "initial_state": config.initial_state,
-        "final_states": list(config.final_states),
-        "additional_info": {
-            "stack_symbols": list(config.stack_symbols) if hasattr(config, "stack_symbols") else None,
-            "initial_stack_symbol": config.initial_stack_symbol if hasattr(config, "initial_stack_symbol") else None,
-            "tape_symbols": list(config.tape_symbols) if hasattr(config, "tape_symbols") else None,
-            "blank_symbol": config.blank_symbol if hasattr(config, "blank_symbol") else None
+        "tipo": automato_data["type"],
+        "estados": list(config.states),
+        "simbolos_entrada": list(config.input_symbols),
+        "transicoes": config.transitions,
+        "estado_inicial": config.initial_state,
+        "estados_finais": list(config.final_states),
+        "info_adicional": {
+            "simbolos_pilha": list(config.stack_symbols) if hasattr(config, "stack_symbols") else None,
+            "simbolo_inicial_pilha": config.initial_stack_symbol if hasattr(config, "initial_stack_symbol") else None,
+            "simbolos_fita": list(config.tape_symbols) if hasattr(config, "tape_symbols") else None,
+            "simbolo_branco": config.blank_symbol if hasattr(config, "blank_symbol") else None
         }
     }
