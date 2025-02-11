@@ -30,3 +30,7 @@ Antes de começar, certifique-se de ter o seguinte instalado em sua máquina:
 1.Após a instalação das dependências, você pode executar a API usando o Uvicorn:
     `uvicorn main:app --reload`
 2.Abra o seu navegador e acesse http://127.0.0.1:8000/docs#/ para interagir com a API
+
+
+# Observações
+1.Você pode visualizar os autômatos usando o seguinte site: http://www.webgraphviz.com/
