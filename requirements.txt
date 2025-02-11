@@ -1,0 +1,5 @@
+fastapi==0.95.1
+uvicorn==0.22.0
+automata-lib
+graphviz==0.20.1
+python-multipart==0.0.6
